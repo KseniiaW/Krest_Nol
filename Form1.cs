@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Media;
 using System.Windows.Forms;
 
 namespace Krest_Nol
@@ -13,13 +14,20 @@ namespace Krest_Nol
         private int player1Wins = 0;
         private int player2Wins = 0;
 
+        private SoundPlayer soundPlayerX;
+        private SoundPlayer soundPlayerO;
+
         public Form1()
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
             player = 1;
             label1.Text = "Текущий ход: Игрок 1 ";
             label2.Text = "Игрок 1:   0";
             label3.Text = "Игрок 2:   0";
+
+            soundPlayerX = new SoundPlayer("click_x.wav");
+            soundPlayerO = new SoundPlayer("click_o.wav");
 
             for (int i = 0; i < buttons.Length / 3; i++)
             {
@@ -59,15 +67,18 @@ namespace Krest_Nol
                     sender.GetType().GetProperty("Text").SetValue(sender, "x");
                     player = 0;
                     label1.Text = "Текущий ход: Игрок 2";
+                    soundPlayerX.Play();
                     break;
                 case 0:
                     sender.GetType().GetProperty("Text").SetValue(sender, "o");
                     player = 1;
                     label1.Text = "Текущий ход: Игрок 1";
+                    soundPlayerO.Play();
                     break;
             }
             sender.GetType().GetProperty("Enabled").SetValue(sender, false);
             checkWin();
+            
         }
 
         private void checkWin()
@@ -183,7 +194,7 @@ namespace Krest_Nol
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            this.Close();
+            this.Hide();
             Form2 startScreen = new Form2();
             startScreen.Show();
         }
@@ -191,6 +202,12 @@ namespace Krest_Nol
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            Application.Exit();
         }
     }
 }
